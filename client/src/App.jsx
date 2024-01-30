@@ -1,5 +1,5 @@
 import './App.css'
-import SignUp from './SignUp'
+import SignUp from './pages/SignUp'
 import Header from './component/Header'
 import About from './pages/About'
 import Home from './pages/Home'
