@@ -6,7 +6,7 @@ const SignIN = () => {
     const [formData, setFormData] = useState()
     const navigate = useNavigate()
     const dispatch =  useDispatch()
-    const {error, loading} = useSelector(state => state.user);
+    const {error, loading} = useSelector(state => state.user) || {};
 
     const handleChange = (event) => {
         setFormData({...formData, [event.target.name]: event.target.value})
