@@ -2,10 +2,14 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 import OAuth from '../component/OAuth'
+import { useSelector } from 'react-redux'
+
+
 const SignUp = () => { 
+
     const [formData, setFormData] = useState()
-    const [error, setError] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const {loading, error} = useSelector(state=> state.user) || {}
+
     const navigate = useNavigate()
     const handleChange = (event) => {
         setFormData({...formData, [event.target.name]: event.target.value})

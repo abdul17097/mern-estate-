@@ -38,35 +38,42 @@ const signin = async (req, res, next) => {
 
 const google = async (req, res, next) => {
     try {
-        const user = await User.findOne({email: req.body.email});
+        const user = await User.findOne({ email: req.body.email });
+
         if (user) {
-            const {password: pass, ...rest} = user
-            const token = jwt.sign({id: user._id}, process.env.JWT_SECRETE_KEY);
+            const { password:pass, ...rest } = user._doc;
+            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRETE_KEY);
+            console.log(rest);
             res
-            .cookie('access_token', token, {httpOnly: true})
-            .statusCode(200)
-            .json(rest)
-        }else{
-            
+                .cookie('access_token', token, { httpOnly: true })
+                .status(200)
+                .json(rest);
+        } else {
             const generatePassword = Math.random().toString(36).slice(-8) + '-' + Math.random().toString(36).slice(-8);
-            const hashedPassword = bcryptjs.hashSync(generatePassword, 10);
-            const newUser = new User({username: req.body.username.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-4), 
-            email: req.body.email, password: hashedPassword,
-            avatar: req.body.photo
+            const hashedPassword = await bcryptjs.hash(generatePassword, 10);
+
+            const newUser = new User({
+                username: req.body.username.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-4),
+                email: req.body.email,
+                password: hashedPassword,
+                avatar: req.body.photo
             });
 
             await newUser.save();
-            const {password:pass, ...rest} = newUser._doc;
-            const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRETE_KEY);
+
+            const { password, ...rest } = newUser._doc;
+            const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRETE_KEY);
+
             res
-            .cookie('access_token', token, {htpOnly: true})
-            .status(200)
-            .json(rest)
+                .cookie('access_token', token, { httpOnly: true })
+                .status(200)
+                .json(rest);
         }
     } catch (error) {
-        next(error.message)
+        next(error);
     }
-}
+};
+
 
 
 module.exports = {signup, signin, google};

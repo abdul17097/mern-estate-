@@ -3,14 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { signInSuccess } from '../redux/userSlice';
 import { app } from '../firebase';
 import {GoogleAuthProvider, getAuth, signInWithPopup} from 'firebase/auth';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
 const OAuth = () => {
     const dispatch =  useDispatch()
     const {loading, error} = useSelector((state) => state.user || {})
     const navigate = useNavigate()
     const handleGoogleClick =async () =>{
         try {
-            console.log("continue with google");
             const provider = new GoogleAuthProvider();
             const auth = getAuth(app);
             const result = await signInWithPopup(auth, provider);
@@ -28,6 +27,7 @@ const OAuth = () => {
                 })
             })
             const data = await res.json();
+            console.log(data);
             dispatch(signInSuccess(data));
             navigate('/')
         } catch (error) {
@@ -35,11 +35,8 @@ const OAuth = () => {
         }
     }
   return (
-    <>
     <button disabled={loading} onClick={handleGoogleClick} type='button' className='bg-red-700 text-white p-3 rounded-lg
     uppercase hover:opacity-95'>{loading? "LOADING...": "Continue with google"}</button>
-
-    </>
     
   )
 }
