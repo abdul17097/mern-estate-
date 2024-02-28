@@ -9,6 +9,8 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import {
+  deleteUserRequest,
+  deleteUserSuccess,
   updateUserFail,
   updateUserRequest,
   updateUserSuccess,
@@ -90,6 +92,27 @@ const Profile = () => {
       dispatch(updateUserFail(error.message));
     }
   };
+
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserRequest());
+      const res = await fetch(`/api/auth/deleteuser/${currentUser._id}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "DELETE",
+      });
+      const data = await res.json();
+      console.log(data);
+      if (data.success) {
+        dispatch(deleteUserSuccess());
+        return;
+      }
+      dispatch(deleteUserFail(data.message));
+    } catch (error) {
+      dispatch(deleteUserFail(data.message));
+    }
+  };
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -151,7 +174,12 @@ const Profile = () => {
         </button>
       </form>
       <div className="flex justify-between py-3">
-        <span className="text-red-700 cursor-pointer">Delete account</span>
+        <button
+          onClick={handleDeleteUser}
+          className="text-red-700 cursor-pointer"
+        >
+          Delete account
+        </button>
         <span className="text-red-700 cursor-pointer">Sigin out</span>
       </div>
       {error ? <p className="text-red-800 text-center">{error}</p> : ""}

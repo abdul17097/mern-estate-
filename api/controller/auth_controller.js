@@ -113,4 +113,21 @@ const updateUser = async (req, res, next) => {
   }
 };
 
-module.exports = { signup, signin, google, updateUser };
+const deleteUser = async (req, res, next) => {
+  const id = req.params.id;
+  console.log(id);
+  if (req.user.id !== req.params.id) {
+    return next(errorHandler(401, "you can only delete your own account!"));
+  }
+  try {
+    await User.findByIdAndDelete(id);
+    res.clearCookie("access_token");
+    res
+      .status(200)
+      .json({ message: "User deleted successfully", success: true });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { signup, signin, google, updateUser, deleteUser };
