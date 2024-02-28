@@ -11,6 +11,9 @@ import {
 import {
   deleteUserRequest,
   deleteUserSuccess,
+  signoutUserFail,
+  signoutUserRequest,
+  signoutUserSuccess,
   updateUserFail,
   updateUserRequest,
   updateUserSuccess,
@@ -113,6 +116,28 @@ const Profile = () => {
       dispatch(deleteUserFail(data.message));
     }
   };
+
+  const handleSignout = async () => {
+    try {
+      dispatch(signoutUserRequest());
+      const res = await fetch("/api/auth/signOut", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "GET",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signoutUserFail(data.message));
+        return;
+      }
+      dispatch(signoutUserSuccess());
+    } catch (error) {
+      console.error("Error occurred during signout:", error);
+      dispatch(signoutUserFail("An error occurred during signout."));
+    }
+  };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -180,16 +205,22 @@ const Profile = () => {
         >
           Delete account
         </button>
-        <span className="text-red-700 cursor-pointer">Sigin out</span>
+        <button onClick={handleSignout} className="text-red-700 cursor-pointer">
+          Sign out
+        </button>
       </div>
-      {error ? <p className="text-red-800 text-center">{error}</p> : ""}
+      {/* {error && error ? (
+        <p className="text-red-800 text-center">{error}</p>
+      ) : (
+        ""
+      )}
       {successUpdate ? (
         <p className="text-green-500 text-center font-semibold">
           User Successfully Updated!
         </p>
       ) : (
         ""
-      )}
+      )} */}
     </div>
   );
 };
