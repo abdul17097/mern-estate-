@@ -4,6 +4,7 @@ require("dotenv").config();
 const cookieParser = require("cookie-parser");
 
 const authRouter = require("./router/auth_route");
+const listingRouter = require("./router/listing_route");
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
@@ -17,6 +18,7 @@ mongoose
   });
 
 app.use("/api/auth", authRouter);
+app.use("/api/listing", listingRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

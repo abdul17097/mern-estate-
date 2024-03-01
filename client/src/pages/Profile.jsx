@@ -18,7 +18,7 @@ import {
   updateUserRequest,
   updateUserSuccess,
 } from "../redux/userSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -197,6 +197,12 @@ const Profile = () => {
         >
           {loading ? "Loading..." : "Update"}
         </button>
+        <Link
+          to="/create-listing"
+          className="bg-green-700 text-center text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80"
+        >
+          Create Listing
+        </Link>
       </form>
       <div className="flex justify-between py-3">
         <button
@@ -209,18 +215,14 @@ const Profile = () => {
           Sign out
         </button>
       </div>
-      {/* {error && error ? (
-        <p className="text-red-800 text-center">{error}</p>
-      ) : (
-        ""
-      )}
+      {error ? <p className="text-red-800 text-center">{error}</p> : ""}
       {successUpdate ? (
         <p className="text-green-500 text-center font-semibold">
           User Successfully Updated!
         </p>
       ) : (
         ""
-      )} */}
+      )}
     </div>
   );
 };
